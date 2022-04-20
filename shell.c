@@ -14,34 +14,61 @@ int main(int argc, char *argv[]){
     clear();
 
     //prompt: username
-	char *username = getenv("USER");
+    char *username = getenv("USER");
 
     //prompt: hostname
-	char hostname[1024];
-	hostname[1023] = '\0';
-	gethostname(hostname, 1023);
+    char hostname[1024];
+    hostname[1023] = '\0';
+    gethostname(hostname, 1023);
 
     //prompt: working_directory
     char *working_directory = getenv("PWD");
 
     char prompt[1032];
 
-  	snprintf(prompt, sizeof(prompt), "%s@%s:%s $ ", username, hostname, working_directory);
+    snprintf(prompt, sizeof(prompt), "%s@%s:%s $ ", username, hostname, working_directory);
 
-    char line[MAXLINE]; // buffer for the user input
+    char line[MAXLINE]; //buffer for the user input
     char *lastPosition;
 
-  	while(1){
+    while(1){
 
-  	    //Print out the prompt
-  	    printf("%s", prompt);
-  	    fgets(line, MAXLINE, stdin);
+        //Print out the prompt
+        printf("%s", prompt);
+        fgets(line, MAXLINE, stdin);
 
-  	    lastPosition=strchr(line, '\n');
+        lastPosition=strchr(line, '\n');
         if(lastPosition!=NULL){
-            *lastPosition = '\0';}
+            *lastPosition='\0';}
 
-        if(strcmp(line, "exit") == 0){
+        int loop, lineLength=strlen(line);
+
+        int spaces=0; //keep track number of spaces found in the arg string, so how large the argument array is known
+        for(loop=0;loop<lineLength;loop++){
+            if(line[loop] == ' '){
+                spaces++;}
+        }
+
+        //Initialize the argument array to have space for a null at the end
+        char* toks[(spaces+2)];
+
+        //Initialize the entire array to be null to start
+        for(loop=0;loop<spaces+2;loop++){
+          toks[loop]=NULL;}
+
+        int counter=0;
+
+        //Cut the string up into individual array indexes
+        char *token=strtok(line, " :'\n''\t'");
+
+        while(token!=NULL){
+            toks[counter]=strdup(token);
+            token=strtok(NULL, " :'\n''\t'");
+            counter++;}
+
+        toks[counter]=token;
+
+        if(strcmp(toks[0], "exit") == 0){
             exit(0);}
 
     }
