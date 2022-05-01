@@ -10,30 +10,20 @@
 
 //Function Declaration (Prototype)
 void clear();
+void display_prompt();
+
+char prompt[1032];
 
 int main(int argc, char *argv[]){
 
     clear();
 
-    //prompt: username
-    char *username = getenv("USER");
-
-    //prompt: hostname
-    char hostname[1024];
-    hostname[1023] = '\0';
-    gethostname(hostname, 1023);
-
-    //prompt: working_directory
-    char *working_directory = getenv("PWD");
-
-    char prompt[1032];
-
-    snprintf(prompt, sizeof(prompt), "%s@%s:%s $ ", username, hostname, working_directory);
-
     char line[MAXLINE]; //buffer for the user input
     char *lastPosition;
 
     while(1){
+
+        display_prompt();
 
         //print out the prompt
         printf("%s", prompt);
@@ -111,5 +101,24 @@ return 0;
 void clear(){
 
     printf("\033[H\033[J");
+
+}
+
+//Function Definition: display_prompt
+void display_prompt(){
+
+    //prompt: username
+    char *username = getenv("USER");
+
+    //prompt: hostname
+    char hostname[1024];
+    hostname[1023] = '\0';
+    gethostname(hostname, 1023);
+
+    //prompt: working_directory
+    char temp[1024];
+    char *working_directory = getcwd(temp, sizeof(temp));
+
+    snprintf(prompt, sizeof(prompt), "%s@%s:%s $ ", username, hostname, working_directory);
 
 }
