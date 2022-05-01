@@ -88,6 +88,21 @@ int main(int argc, char *argv[]){
             }
         }
 
+        else if(strcmp(toks[0], "grep") == 0){
+
+            int status;
+            char *args[2];
+
+            args[0] = "/bin/grep"; //first arg is the full path to the executable
+            args[1] = NULL; //list of args must be NULL terminated
+
+            if(fork()==0){
+                execv(args[0], args);} //child: call execv with the path and the args
+            else{
+                wait(&status);} //parent: wait for the child
+
+
+}
     }
 
     printf("\n");
