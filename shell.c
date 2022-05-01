@@ -80,13 +80,11 @@ int main(int argc, char *argv[]){
         else if(strcmp(toks[0], "cd") == 0){
 
             if(toks[1] == NULL){
-                chdir(getenv("HOME"));
-                return 1;}
+                chdir(getenv("HOME"));}
 
             else{
                 if(chdir(toks[1]) == -1){
-                    printf(" %s: no such directory\n", toks[1]);
-                    return -1;}
+                    printf(" %s: No such file or directory\n", toks[1]);}
             }
         }
 
