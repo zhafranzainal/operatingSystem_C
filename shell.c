@@ -73,6 +73,20 @@ int main(int argc, char *argv[]){
         if(strcmp(toks[0], "exit") == 0){
             exit(0);}
 
+        else if(strcmp(toks[0], "ls") == 0){
+
+            int status;
+            char *args[2];
+
+            args[0] = "/bin/ls"; //first arg is the full path to the executable
+            args[1] = NULL; //list of args must be NULL terminated
+
+            if(fork()==0){
+                execv(args[0], args);} //child: call execv with the path and the args
+            else{
+                wait(&status);} //parent: wait for the child
+        }
+
         else if(strcmp(toks[0], "cd") == 0){
 
             if(toks[1] == NULL){
@@ -84,21 +98,10 @@ int main(int argc, char *argv[]){
                     printf(" %s: no such directory\n", toks[1]);
                     return -1;}
             }
-
         }
 
-        int status;
-        char *args[2];
-
-        args[0] = "/bin/ls"; //first arg is the full path to the executable
-        args[1] = NULL; //list of args must be NULL terminated
-
-        if(fork()==0){
-            execv(args[0], args);} //child: call execv with the path and the args
-        else{
-            wait(&status);} //parent: wait for the child
-
     }
+
     printf("\n");
 
 return 0;
