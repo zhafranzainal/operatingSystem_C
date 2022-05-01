@@ -100,9 +100,8 @@ int main(int argc, char *argv[]){
                 execv(args[0], args);} //child: call execv with the path and the args
             else{
                 wait(&status);} //parent: wait for the child
+        }
 
-
-}
     }
 
     printf("\n");
