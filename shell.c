@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-#define LIMIT 256 // max number of tokens for a command
-#define MAXLINE 1024 // max number of characters from user input
+#define LIMIT 256 //max number of tokens for a command
+#define MAXLINE 1024 //max number of characters from user input
 
 //Function Declaration (Prototype)
 void clear();
@@ -33,7 +35,7 @@ int main(int argc, char *argv[]){
 
     while(1){
 
-        //Print out the prompt
+        //print out the prompt
         printf("%s", prompt);
         fgets(line, MAXLINE, stdin);
 
@@ -49,16 +51,16 @@ int main(int argc, char *argv[]){
                 spaces++;}
         }
 
-        //Initialize the argument array to have space for a null at the end
+        //initialize the argument array to have space for a null at the end
         char* toks[(spaces+2)];
 
-        //Initialize the entire array to be null to start
+        //initialize the entire array to be null to start
         for(loop=0;loop<spaces+2;loop++){
           toks[loop]=NULL;}
 
         int counter=0;
 
-        //Cut the string up into individual array indexes
+        //cut the string up into individual array indexes
         char *token=strtok(line, " :'\n''\t'");
 
         while(token!=NULL){
@@ -71,9 +73,19 @@ int main(int argc, char *argv[]){
         if(strcmp(toks[0], "exit") == 0){
             exit(0);}
 
-    }
+        int status;
+        char *args[2];
 
-	printf("\n");
+        args[0] = "/bin/ls"; //first arg is the full path to the executable
+        args[1] = NULL; //list of args must be NULL terminated
+
+        if(fork()==0){
+            execv(args[0], args);} //child: call execv with the path and the args
+        else{
+            wait(&status);} //parent: wait for the child
+
+    }
+    printf("\n");
 
 return 0;
 }
