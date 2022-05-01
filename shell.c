@@ -73,6 +73,20 @@ int main(int argc, char *argv[]){
         if(strcmp(toks[0], "exit") == 0){
             exit(0);}
 
+        else if(strcmp(toks[0], "cd") == 0){
+
+            if(toks[1] == NULL){
+                chdir(getenv("HOME"));
+                return 1;}
+
+            else{
+                if(chdir(toks[1]) == -1){
+                    printf(" %s: no such directory\n", toks[1]);
+                    return -1;}
+            }
+
+        }
+
         int status;
         char *args[2];
 
